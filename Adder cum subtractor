@@ -1,0 +1,39 @@
+ module full_adder(
+ input a,b,cin, 
+ output sum,cout
+  );
+ assign sum = a ^ b ^ cin; 
+ assign cout = (a&b) | (b&cin) | (cin&a);
+ endmodule
+
+module adder_cum_sub(
+    input [3:0] a,
+    input [3:0] b,
+    input sub,  
+
+    output [3:0] sum,
+    output carry,
+    output borrow
+);
+
+wire [3:0] b1;
+wire [4:0] w;
+
+assign b1 = b ^ {4{sub}};
+
+assign w[0] = sub;
+
+
+full_adder u1 (.a(a[0]), .b(b1[0]), .cin(w[0]), .sum(sum[0]), .cout(w[1]));
+full_adder u2 (.a(a[1]), .b(b1[1]), .cin(w[1]), .sum(sum[1]), .cout(w[2]));
+full_adder u3 (.a(a[2]), .b(b1[2]), .cin(w[2]), .sum(sum[2]), .cout(w[3]));
+full_adder u4 (.a(a[3]), .b(b1[3]), .cin(w[3]), .sum(sum[3]), .cout(w[4]));
+
+assign carry  = (~sub) & w[4];   
+assign borrow = sub & ~w[4];    
+
+endmodule
+
+
+
+
